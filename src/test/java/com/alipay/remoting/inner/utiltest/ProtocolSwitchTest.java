@@ -16,8 +16,7 @@
  */
 package com.alipay.remoting.inner.utiltest;
 
-import java.util.BitSet;
-
+import com.alipay.remoting.config.switches.ProtocolSwitch;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -25,10 +24,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.alipay.remoting.config.switches.ProtocolSwitch;
+import java.util.BitSet;
 
 /**
- *
  * @author tsui
  * @version $Id: ProtocolSwitchStatusTest.java, v 0.1 2017-10-09 20:23 tsui Exp $
  */
@@ -38,16 +36,16 @@ public class ProtocolSwitchTest {
     public static void initClass() {
     }
 
+    @AfterClass
+    public static void afterClass() {
+    }
+
     @Before
     public void init() {
     }
 
     @After
     public void stop() {
-    }
-
-    @AfterClass
-    public static void afterClass() {
     }
 
     @Test
@@ -97,7 +95,7 @@ public class ProtocolSwitchTest {
     @Test
     public void test_createUsingIndex() {
         for (int i = 0; i < 7; ++i) {
-            Assert.assertTrue(ProtocolSwitch.create(new int[] { i }).isOn(i));
+            Assert.assertTrue(ProtocolSwitch.create(new int[]{i}).isOn(i));
         }
 
         int size = 7;

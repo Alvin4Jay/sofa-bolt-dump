@@ -31,44 +31,56 @@ import com.alipay.remoting.rpc.protocol.RpcProtocol;
 /**
  * Remoting command. <br>
  * A remoting command stands for a kind of transfer object in the network communication layer.
- * 
+ *
  * @author jiangping
  * @version $Id: RpcCommand.java, v 0.1 2015-9-6 PM5:26:31 tao Exp $
  */
 public abstract class RpcCommand implements RemotingCommand {
 
-    /** For serialization  */
+    /**
+     * For serialization
+     */
     private static final long serialVersionUID = -3570261012462596503L;
 
     /**
      * Code which stands for the command.
      */
-    private CommandCode       cmdCode;
+    private CommandCode cmdCode;
     /* command version */
-    private byte              version          = 0x1;
-    private byte              type;
+    private byte version = 0x1;
+    private byte type;
     /**
      * Serializer, see the Configs.SERIALIZER_DEFAULT for the default serializer.
      * Notice: this can not be changed after initialized at runtime.
      */
-    private byte              serializer       = ConfigManager.serializer;
+    private byte serializer = ConfigManager.serializer;
     /**
      * protocol switches
      */
-    private ProtocolSwitch    protocolSwitch   = new ProtocolSwitch();
-    private int               id;
-    /** The length of clazz */
-    private short             clazzLength      = 0;
-    private short             headerLength     = 0;
-    private int               contentLength    = 0;
-    /** The class of content */
-    private byte[]            clazz;
-    /** Header is used for transparent transmission. */
-    private byte[]            header;
-    /** The bytes format of the content of the command. */
-    private byte[]            content;
-    /** invoke context of each rpc command. */
-    private InvokeContext     invokeContext;
+    private ProtocolSwitch protocolSwitch = new ProtocolSwitch();
+    private int id;
+    /**
+     * The length of clazz
+     */
+    private short clazzLength = 0;
+    private short headerLength = 0;
+    private int contentLength = 0;
+    /**
+     * The class of content
+     */
+    private byte[] clazz;
+    /**
+     * Header is used for transparent transmission.
+     */
+    private byte[] header;
+    /**
+     * The bytes format of the content of the command.
+     */
+    private byte[] content;
+    /**
+     * invoke context of each rpc command.
+     */
+    private InvokeContext invokeContext;
 
     public RpcCommand() {
     }
@@ -95,7 +107,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Serialize  the class header and content.
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -107,7 +119,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Deserialize the class header and content.
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -120,9 +132,9 @@ public abstract class RpcCommand implements RemotingCommand {
     /**
      * Deserialize according to mask.
      * <ol>
-     *     <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_CLAZZ}, only deserialize clazz - only one part.</li>
-     *     <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_HEADER}, deserialize clazz and header - two parts.</li>
-     *     <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_ALL}, deserialize clazz, header and content - all three parts.</li>
+     * <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_CLAZZ}, only deserialize clazz - only one part.</li>
+     * <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_HEADER}, deserialize clazz and header - two parts.</li>
+     * <li>If mask <= {@link RpcDeserializeLevel#DESERIALIZE_ALL}, deserialize clazz, header and content - all three parts.</li>
      * </ol>
      *
      * @param mask
@@ -141,7 +153,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Serialize content class.
-     * 
+     *
      * @throws Exception
      */
     public void serializeClazz() throws SerializationException {
@@ -150,7 +162,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Deserialize the content class.
-     * 
+     *
      * @throws Exception
      */
     public void deserializeClazz() throws DeserializationException {
@@ -159,7 +171,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Serialize the header.
-     * 
+     *
      * @throws Exception
      */
     public void serializeHeader(InvokeContext invokeContext) throws SerializationException {
@@ -167,7 +179,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Serialize the content.
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -176,7 +188,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Deserialize the header.
-     * 
+     *
      * @throws Exception
      */
     public void deserializeHeader(InvokeContext invokeContext) throws DeserializationException {
@@ -184,7 +196,7 @@ public abstract class RpcCommand implements RemotingCommand {
 
     /**
      * Deserialize the content.
-     * 
+     *
      * @throws Exception
      */
     @Override
@@ -201,9 +213,17 @@ public abstract class RpcCommand implements RemotingCommand {
         return cmdCode;
     }
 
+    public void setCmdCode(CommandCode cmdCode) {
+        this.cmdCode = cmdCode;
+    }
+
     @Override
     public InvokeContext getInvokeContext() {
         return invokeContext;
+    }
+
+    public void setInvokeContext(InvokeContext invokeContext) {
+        this.invokeContext = invokeContext;
     }
 
     @Override
@@ -211,13 +231,17 @@ public abstract class RpcCommand implements RemotingCommand {
         return serializer;
     }
 
+    public void setSerializer(byte serializer) {
+        this.serializer = serializer;
+    }
+
     @Override
     public ProtocolSwitch getProtocolSwitch() {
         return protocolSwitch;
     }
 
-    public void setCmdCode(CommandCode cmdCode) {
-        this.cmdCode = cmdCode;
+    public void setProtocolSwitch(ProtocolSwitch protocolSwitch) {
+        this.protocolSwitch = protocolSwitch;
     }
 
     public byte getVersion() {
@@ -234,14 +258,6 @@ public abstract class RpcCommand implements RemotingCommand {
 
     public void setType(byte type) {
         this.type = type;
-    }
-
-    public void setSerializer(byte serializer) {
-        this.serializer = serializer;
-    }
-
-    public void setProtocolSwitch(ProtocolSwitch protocolSwitch) {
-        this.protocolSwitch = protocolSwitch;
     }
 
     @Override
@@ -296,9 +312,5 @@ public abstract class RpcCommand implements RemotingCommand {
             this.clazz = clazz;
             this.clazzLength = (short) clazz.length;
         }
-    }
-
-    public void setInvokeContext(InvokeContext invokeContext) {
-        this.invokeContext = invokeContext;
     }
 }

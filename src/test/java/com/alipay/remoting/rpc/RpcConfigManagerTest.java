@@ -28,16 +28,16 @@ public class RpcConfigManagerTest {
     public static void initClass() {
     }
 
+    @AfterClass
+    public static void afterClass() {
+    }
+
     @Before
     public void init() {
     }
 
     @After
     public void stop() {
-    }
-
-    @AfterClass
-    public static void afterClass() {
     }
 
     @Test
