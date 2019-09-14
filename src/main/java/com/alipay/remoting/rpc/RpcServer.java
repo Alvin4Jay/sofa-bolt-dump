@@ -86,19 +86,13 @@ public class RpcServer extends AbstractRemotingServer {
     /**
      * logger
      */
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("RpcRemoting");
+    private static final Logger logger = BoltLoggerFactory.getLogger("RpcRemoting");
     /**
      * worker event loop group. Reuse I/O worker threads between rpc servers.
      */
     private static final EventLoopGroup workerGroup = NettyEventLoopUtil
-            .newEventLoopGroup(
-                    Runtime
-                            .getRuntime()
-                            .availableProcessors() * 2,
-                    new NamedThreadFactory(
-                            "Rpc-netty-server-worker",
-                            true));
+            .newEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2,
+                    new NamedThreadFactory("Rpc-netty-server-worker", true));
 
     static {
         if (workerGroup instanceof NioEventLoopGroup) {
@@ -111,12 +105,8 @@ public class RpcServer extends AbstractRemotingServer {
     /**
      * boss event loop group, boss group should not be daemon, need shutdown manually
      */
-    private final EventLoopGroup bossGroup = NettyEventLoopUtil
-            .newEventLoopGroup(
-                    1,
-                    new NamedThreadFactory(
-                            "Rpc-netty-server-boss",
-                            false));
+    private final EventLoopGroup bossGroup = NettyEventLoopUtil.newEventLoopGroup(1,
+                    new NamedThreadFactory("Rpc-netty-server-boss", false));
     /**
      * rpc remoting
      */
