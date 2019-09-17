@@ -32,7 +32,7 @@ public class InvokeContext {
     public final static String CLIENT_REMOTE_IP = "bolt.client.remote.ip";
     public final static String CLIENT_REMOTE_PORT = "bolt.client.remote.port";
     /**
-     * time consumed during connection creating, this is a timespan
+     * time consumed during connection creating, this is a timespan 时间区间
      */
     public final static String CLIENT_CONN_CREATETIME = "bolt.client.conn.createtime";
 

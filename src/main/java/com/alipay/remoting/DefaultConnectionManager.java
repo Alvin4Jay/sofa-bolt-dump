@@ -49,8 +49,7 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: DefaultConnectionManager.java, v 0.1 Mar 8, 2016 10:43:51 AM xiaomin.cxm Exp $
  */
 public class DefaultConnectionManager extends AbstractLifeCycle implements ConnectionManager,
-        ConnectionHeartbeatManager,
-        Scannable, LifeCycle {
+        ConnectionHeartbeatManager, Scannable, LifeCycle {
 
     private static final Logger logger = BoltLoggerFactory
             .getLogger("CommonDefault");

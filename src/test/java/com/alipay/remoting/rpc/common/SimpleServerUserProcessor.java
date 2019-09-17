@@ -42,8 +42,7 @@ public class SimpleServerUserProcessor extends SyncUserProcessor<RequestBody> {
     /**
      * logger
      */
-    private static final Logger logger = LoggerFactory
-            .getLogger(SimpleServerUserProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleServerUserProcessor.class);
 
     /**
      * delay milliseconds
@@ -95,8 +94,7 @@ public class SimpleServerUserProcessor extends SyncUserProcessor<RequestBody> {
                                      int workQueue) {
         this(delay);
         this.executor = new ThreadPoolExecutor(core, max, keepaliveSeconds, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(workQueue), new NamedThreadFactory(
-                "Request-process-pool"));
+                new ArrayBlockingQueue<Runnable>(workQueue), new NamedThreadFactory("Request-process-pool"));
     }
 
     // ~~~ override methods

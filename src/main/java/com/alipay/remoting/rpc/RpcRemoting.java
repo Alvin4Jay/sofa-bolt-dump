@@ -143,8 +143,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      */
     public Object invokeSync(final String addr, final Object request,
                              final InvokeContext invokeContext, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         Url url = this.addressParser.parse(addr);
         return this.invokeSync(url, request, invokeContext, timeoutMillis);
     }
@@ -180,8 +179,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      */
     public Object invokeSync(final Connection conn, final Object request,
                              final InvokeContext invokeContext, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         RemotingCommand requestCommand = toRemotingCommand(request, conn, invokeContext,
                 timeoutMillis);
         preProcessInvokeContext(invokeContext, requestCommand, conn);

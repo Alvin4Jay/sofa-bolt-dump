@@ -83,9 +83,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RpcServer extends AbstractRemotingServer {
 
-    /**
-     * logger
-     */
+    /** logger */
     private static final Logger logger = BoltLoggerFactory.getLogger("RpcRemoting");
     /**
      * worker event loop group. Reuse I/O worker threads between rpc servers.
@@ -130,8 +128,8 @@ public class RpcServer extends AbstractRemotingServer {
     /**
      * user processors of rpc server
      */
-    private ConcurrentHashMap<String, UserProcessor<?>> userProcessors = new ConcurrentHashMap<String, UserProcessor<?>>(
-            4);
+    private ConcurrentHashMap<String, UserProcessor<?>> userProcessors =
+            new ConcurrentHashMap<String, UserProcessor<?>>(4);
     /**
      * address parser to get custom args
      */

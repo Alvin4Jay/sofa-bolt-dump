@@ -41,8 +41,7 @@ public class SimpleClientUserProcessor extends SyncUserProcessor<RequestBody> {
     /**
      * logger
      */
-    private static final Logger logger = LoggerFactory
-            .getLogger(SimpleClientUserProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleClientUserProcessor.class);
 
     /**
      * delay milliseconds

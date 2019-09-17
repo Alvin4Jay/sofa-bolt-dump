@@ -42,8 +42,7 @@ public class AsyncServerUserProcessor extends AsyncUserProcessor<RequestBody> {
     /**
      * logger
      */
-    private static final Logger logger = LoggerFactory
-            .getLogger(AsyncServerUserProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncServerUserProcessor.class);
 
     /**
      * delay milliseconds

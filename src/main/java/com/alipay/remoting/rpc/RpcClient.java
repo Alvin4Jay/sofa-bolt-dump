@@ -159,8 +159,7 @@ public class RpcClient extends AbstractBoltClient {
 
     @Override
     public void oneway(final String address, final Object request, final InvokeContext invokeContext)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         this.rpcRemoting.oneway(address, request, invokeContext);
     }
 
@@ -190,16 +189,14 @@ public class RpcClient extends AbstractBoltClient {
 
     @Override
     public Object invokeSync(final String address, final Object request, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         return this.rpcRemoting.invokeSync(address, request, null, timeoutMillis);
     }
 
     @Override
     public Object invokeSync(final String address, final Object request,
                              final InvokeContext invokeContext, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         return this.rpcRemoting.invokeSync(address, request, invokeContext, timeoutMillis);
     }
 

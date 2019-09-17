@@ -52,8 +52,7 @@ import java.util.concurrent.Executors;
  * @version $Id: BasicUsage_InvokeContext_Test.java, v 0.1 Apr 6, 2016 8:58:36 PM xiaomin.cxm Exp $
  */
 public class BasicUsage_InvokeContext_Test {
-    static Logger logger = LoggerFactory
-            .getLogger(BasicUsage_InvokeContext_Test.class);
+    static Logger logger = LoggerFactory.getLogger(BasicUsage_InvokeContext_Test.class);
 
     BoltServer server;
     RpcClient client;

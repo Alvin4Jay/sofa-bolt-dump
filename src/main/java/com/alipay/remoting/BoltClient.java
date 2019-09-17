@@ -63,8 +63,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      * @param invokeContext invoke context
      */
     void oneway(final String address, final Object request, final InvokeContext invokeContext)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * One way invocation using a parsed {@link Url} <br>
@@ -139,8 +138,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      * @return result object
      */
     Object invokeSync(final String address, final Object request, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * Synchronous invocation with a {@link InvokeContext}, common api notice please see {@link #invokeSync(String, Object, int)}
@@ -153,8 +151,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      */
     Object invokeSync(final String address, final Object request,
                       final InvokeContext invokeContext, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * Synchronous invocation using a parsed {@link Url} <br>
@@ -177,8 +174,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      * @return Object
      */
     Object invokeSync(final Url url, final Object request, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * Synchronous invocation with a {@link InvokeContext}, common api notice please see {@link #invokeSync(Url, Object, int)}

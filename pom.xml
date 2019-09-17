@@ -24,7 +24,10 @@
     <groupId>com.alipay.sofa</groupId>
     <artifactId>bolt</artifactId>
     <version>1.6.0</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>bolt-demo</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>a light weight, easy to use and high performance remoting framework based on netty.</description>

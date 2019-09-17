@@ -34,8 +34,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: RpcClientDemoByMain.java, v 0.1 2018-04-10 10:39 tsui Exp $
  */
 public class RpcClientDemoByMain {
-    static Logger logger = LoggerFactory
-            .getLogger(RpcClientDemoByMain.class);
+    static Logger logger = LoggerFactory.getLogger(RpcClientDemoByMain.class);
 
     static RpcClient client;
 
@@ -62,7 +61,7 @@ public class RpcClientDemoByMain {
             String res = (String) client.invokeSync(addr, req, 3000);
             System.out.println("invoke sync result = [" + res + "]");
         } catch (RemotingException e) {
-            String errMsg = "RemotingException caught in oneway!";
+            String errMsg = "RemotingException caught in sync!";
             logger.error(errMsg, e);
             Assert.fail(errMsg);
         } catch (InterruptedException e) {

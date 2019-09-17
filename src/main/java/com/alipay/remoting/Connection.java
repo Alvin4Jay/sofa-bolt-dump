@@ -46,30 +46,24 @@ public class Connection {
     /**
      * Attribute key for connection
      */
-    public static final AttributeKey<Connection> CONNECTION = AttributeKey
-            .valueOf("connection");
+    public static final AttributeKey<Connection> CONNECTION = AttributeKey.valueOf("connection");
     /**
      * Attribute key for heartbeat count
      */
-    public static final AttributeKey<Integer> HEARTBEAT_COUNT = AttributeKey
-            .valueOf("heartbeatCount");
+    public static final AttributeKey<Integer> HEARTBEAT_COUNT = AttributeKey.valueOf("heartbeatCount");
     /**
      * Attribute key for heartbeat switch for each connection
      */
-    public static final AttributeKey<Boolean> HEARTBEAT_SWITCH = AttributeKey
-            .valueOf("heartbeatSwitch");
+    public static final AttributeKey<Boolean> HEARTBEAT_SWITCH = AttributeKey.valueOf("heartbeatSwitch");
     /**
      * Attribute key for protocol
      */
-    public static final AttributeKey<ProtocolCode> PROTOCOL = AttributeKey
-            .valueOf("protocol");
+    public static final AttributeKey<ProtocolCode> PROTOCOL = AttributeKey.valueOf("protocol");
     /**
      * Attribute key for version
      */
-    public static final AttributeKey<Byte> VERSION = AttributeKey
-            .valueOf("version");
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("CommonDefault");
+    public static final AttributeKey<Byte> VERSION = AttributeKey.valueOf("version");
+    private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
     /**
      * no reference of the current connection
      */

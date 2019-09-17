@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: RpcServerDemoByMain.java, v 0.1 2018-04-10 10:37 tsui Exp $
  */
 public class RpcServerDemoByMain {
-    static Logger logger = LoggerFactory
-            .getLogger(RpcServerDemoByMain.class);
+    static Logger logger = LoggerFactory.getLogger(RpcServerDemoByMain.class);
 
     BoltServer server;
 

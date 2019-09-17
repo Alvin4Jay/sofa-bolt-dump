@@ -52,8 +52,7 @@ import java.util.concurrent.Executors;
  * @version $Id: BasicUsageDemo.java, v 0.1 Apr 6, 2016 8:58:36 PM xiaomin.cxm Exp $
  */
 public class BasicUsageDemoByJunit {
-    static Logger logger = LoggerFactory
-            .getLogger(BasicUsageDemoByJunit.class);
+    static Logger logger = LoggerFactory.getLogger(BasicUsageDemoByJunit.class);
 
     BoltServer server;
     RpcClient client;
@@ -74,7 +73,7 @@ public class BasicUsageDemoByJunit {
     @Before
     public void init() {
         server = new BoltServer(port, true);
-        server.start();
+        server.start(); // 启动服务端
         server.addConnectionEventProcessor(ConnectionEventType.CONNECT, serverConnectProcessor);
         server.addConnectionEventProcessor(ConnectionEventType.CLOSE, serverDisConnectProcessor);
         server.registerUserProcessor(serverUserProcessor);
@@ -83,7 +82,7 @@ public class BasicUsageDemoByJunit {
         client.addConnectionEventProcessor(ConnectionEventType.CONNECT, clientConnectProcessor);
         client.addConnectionEventProcessor(ConnectionEventType.CLOSE, clientDisConnectProcessor);
         client.registerUserProcessor(clientUserProcessor);
-        client.init();
+        client.init(); // 客户端初始化，还未启动
     }
 
     @After
