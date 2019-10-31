@@ -29,16 +29,14 @@ import java.util.Map;
  * @version $Id: DefaultConfigContainer.java, v 0.1 2018-07-28 18:11 tsui Exp $$
  */
 public class DefaultConfigContainer implements ConfigContainer {
-    /**
-     * logger
-     */
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("CommonDefault");
+
+    /** logger */
+    private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
 
     /**
      * use a hash map to store the user configs with different config types and config items.
      */
-    private Map<ConfigType, Map<ConfigItem, Object>> userConfigs = new HashMap<ConfigType, Map<ConfigItem, Object>>();
+    private Map<ConfigType, Map<ConfigItem, Object>> userConfigs = new HashMap<>();
 
     @Override
     public boolean contains(ConfigType configType, ConfigItem configItem) {
@@ -50,7 +48,7 @@ public class DefaultConfigContainer implements ConfigContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(ConfigType configType, ConfigItem configItem) {
-        validate(configType, configItem);
+        validate(configType, configItem); // 参数校验
         if (userConfigs.containsKey(configType)) {
             return (T) userConfigs.get(configType).get(configItem);
         }
@@ -59,14 +57,14 @@ public class DefaultConfigContainer implements ConfigContainer {
 
     @Override
     public void set(ConfigType configType, ConfigItem configItem, Object value) {
-        validate(configType, configItem, value);
+        validate(configType, configItem, value); // 参数校验
         Map<ConfigItem, Object> items = userConfigs.get(configType);
         if (null == items) {
-            items = new HashMap<ConfigItem, Object>();
+            items = new HashMap<>();
             userConfigs.put(configType, items);
         }
         Object prev = items.put(configItem, value);
-        if (null != prev) {
+        if (null != prev) { // 覆盖更新
             logger.warn("the value of ConfigType {}, ConfigItem {} changed from {} to {}",
                     configType, configItem, prev.toString(), value.toString());
         }

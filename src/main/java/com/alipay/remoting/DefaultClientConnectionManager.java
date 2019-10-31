@@ -24,15 +24,13 @@ import com.alipay.remoting.connection.ConnectionFactory;
  *
  * @author chengyi (mark.lx@antfin.com) 2019-03-07 14:27
  */
-public class DefaultClientConnectionManager extends DefaultConnectionManager implements
-        ClientConnectionManager {
+public class DefaultClientConnectionManager extends DefaultConnectionManager implements ClientConnectionManager {
 
     public DefaultClientConnectionManager(ConnectionSelectStrategy connectionSelectStrategy,
                                           ConnectionFactory connectionFactory,
                                           ConnectionEventHandler connectionEventHandler,
                                           ConnectionEventListener connectionEventListener) {
-        super(connectionSelectStrategy, connectionFactory, connectionEventHandler,
-                connectionEventListener);
+        super(connectionSelectStrategy, connectionFactory, connectionEventHandler, connectionEventListener);
     }
 
     public DefaultClientConnectionManager(ConnectionSelectStrategy connectionSelectStrategy,
@@ -50,7 +48,7 @@ public class DefaultClientConnectionManager extends DefaultConnectionManager imp
 
         this.connectionEventHandler.setConnectionManager(this);
         this.connectionEventHandler.setConnectionEventListener(connectionEventListener);
-        this.connectionFactory.init(connectionEventHandler);
+        this.connectionFactory.init(connectionEventHandler); // 配置netty client
     }
 
 }

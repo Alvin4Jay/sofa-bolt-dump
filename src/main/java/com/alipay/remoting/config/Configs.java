@@ -239,8 +239,7 @@ public class Configs {
      * Codec type
      */
     public static final String SERIALIZER = "bolt.serializer";
-    public static final String SERIALIZER_DEFAULT = String
-            .valueOf(SerializerManager.Hessian2);
+    public static final String SERIALIZER_DEFAULT = String.valueOf(SerializerManager.Hessian2);
 
     /**
      * Charset

@@ -34,9 +34,8 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: BaseRemoting.java, v 0.1 Mar 4, 2016 12:09:56 AM tao Exp $
  */
 public abstract class BaseRemoting {
-    /**
-     * logger
-     */
+
+    /** logger */
     private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
 
     protected CommandFactory commandFactory;
@@ -62,25 +61,19 @@ public abstract class BaseRemoting {
         conn.addInvokeFuture(future);
         final int requestId = request.getId();
         try {
-            conn.getChannel().writeAndFlush(request).addListener(new ChannelFutureListener() {
-
-                @Override
-                public void operationComplete(ChannelFuture f) throws Exception {
-                    if (!f.isSuccess()) {
-                        conn.removeInvokeFuture(requestId);
-                        future.putResponse(commandFactory.createSendFailedResponse(
-                                conn.getRemoteAddress(), f.cause()));
-                        logger.error("Invoke send failed, id={}", requestId, f.cause());
-                    }
+            conn.getChannel().writeAndFlush(request).addListener((ChannelFutureListener) f -> {
+                if (!f.isSuccess()) {
+                    conn.removeInvokeFuture(requestId);
+                    future.putResponse(commandFactory.createSendFailedResponse(conn.getRemoteAddress(), f.cause()));
+                    logger.error("Invoke send failed, id={}", requestId, f.cause());
                 }
-
             });
         } catch (Exception e) {
             conn.removeInvokeFuture(requestId);
             future.putResponse(commandFactory.createSendFailedResponse(conn.getRemoteAddress(), e));
             logger.error("Exception caught when sending invocation, id={}", requestId, e);
         }
-        RemotingCommand response = future.waitResponse(timeoutMillis);
+        RemotingCommand response = future.waitResponse(timeoutMillis); // 使用countdownlatch等待，直到超时
 
         if (response == null) {
             conn.removeInvokeFuture(requestId);

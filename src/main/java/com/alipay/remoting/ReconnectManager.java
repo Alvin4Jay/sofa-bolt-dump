@@ -31,8 +31,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ReconnectManager extends AbstractLifeCycle implements Reconnector {
 
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("CommonDefault");
+    private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
 
     private static final int HEAL_CONNECTION_INTERVAL = 1000;
 

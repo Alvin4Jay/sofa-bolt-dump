@@ -89,11 +89,11 @@ public class RpcServer extends AbstractRemotingServer {
      * worker event loop group. Reuse I/O worker threads between rpc servers.
      */
     private static final EventLoopGroup workerGroup = NettyEventLoopUtil
-            .newEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2,
+            .newEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2, // doubt 为什么是这个线程数
                     new NamedThreadFactory("Rpc-netty-server-worker", true));
 
     static {
-        if (workerGroup instanceof NioEventLoopGroup) {
+        if (workerGroup instanceof NioEventLoopGroup) { // 设置io事件与task处理时间比例
             ((NioEventLoopGroup) workerGroup).setIoRatio(ConfigManager.netty_io_ratio());
         } else if (workerGroup instanceof EpollEventLoopGroup) {
             ((EpollEventLoopGroup) workerGroup).setIoRatio(ConfigManager.netty_io_ratio());
@@ -101,46 +101,36 @@ public class RpcServer extends AbstractRemotingServer {
     }
 
     /**
-     * boss event loop group, boss group should not be daemon, need shutdown manually
+     * boss event loop group, boss group should not be daemon, need shutdown manually 实例级别 // doubt 为什么不能使用daemon
      */
     private final EventLoopGroup bossGroup = NettyEventLoopUtil.newEventLoopGroup(1,
                     new NamedThreadFactory("Rpc-netty-server-boss", false));
-    /**
-     * rpc remoting
-     */
+
+    /** rpc remoting--RpcServerRemoting */
     protected RpcRemoting rpcRemoting;
-    /**
-     * server bootstrap
-     */
+
+    /** server bootstrap */
     private ServerBootstrap bootstrap;
-    /**
-     * channelFuture
-     */
+
+    /** channelFuture */
     private ChannelFuture channelFuture;
-    /**
-     * connection event handler
-     */
+
+    /** connection event handler */
     private ConnectionEventHandler connectionEventHandler;
-    /**
-     * connection event listener
-     */
+
+    /** connection event listener */
     private ConnectionEventListener connectionEventListener = new ConnectionEventListener();
-    /**
-     * user processors of rpc server
-     */
-    private ConcurrentHashMap<String, UserProcessor<?>> userProcessors =
-            new ConcurrentHashMap<String, UserProcessor<?>>(4);
-    /**
-     * address parser to get custom args
-     */
+
+    /** user processors of rpc server */
+    private ConcurrentHashMap<String, UserProcessor<?>> userProcessors = new ConcurrentHashMap<String, UserProcessor<?>>(4);
+
+    /** address parser to get custom args */
     private RemotingAddressParser addressParser;
-    /**
-     * connection manager
-     */
+
+    /** connection manager 可能为null*/
     private DefaultServerConnectionManager connectionManager;
-    /**
-     * rpc codec
-     */
+
+    /** rpc codec */
     private Codec codec = new RpcCodec();
 
     /**
@@ -228,7 +218,7 @@ public class RpcServer extends AbstractRemotingServer {
     @Override
     protected void doInit() {
         if (this.addressParser == null) {
-            this.addressParser = new RpcAddressParser();
+            this.addressParser = new RpcAddressParser(); // 地址解析器
         }
         if (this.switches().isOn(GlobalSwitch.SERVER_MANAGE_CONNECTION_SWITCH)) {
             // in server side, do not care the connection service state, so use null instead of global switch
@@ -236,9 +226,9 @@ public class RpcServer extends AbstractRemotingServer {
             this.connectionManager = new DefaultServerConnectionManager(connectionSelectStrategy);
             this.connectionManager.startup();
 
-            this.connectionEventHandler = new RpcConnectionEventHandler(switches());
-            this.connectionEventHandler.setConnectionManager(this.connectionManager);
-            this.connectionEventHandler.setConnectionEventListener(this.connectionEventListener);
+            this.connectionEventHandler = new RpcConnectionEventHandler(switches()); // 连接事件处理器
+            this.connectionEventHandler.setConnectionManager(this.connectionManager); // 设置连接管理器
+            this.connectionEventHandler.setConnectionEventListener(this.connectionEventListener);  // 设置连接事件监听
         } else {
             this.connectionEventHandler = new ConnectionEventHandler(switches());
             this.connectionEventHandler.setConnectionEventListener(this.connectionEventListener);
@@ -246,17 +236,17 @@ public class RpcServer extends AbstractRemotingServer {
         initRpcRemoting();
         this.bootstrap = new ServerBootstrap();
         this.bootstrap.group(bossGroup, workerGroup)
-                .channel(NettyEventLoopUtil.getServerSocketChannelClass())
-                .option(ChannelOption.SO_BACKLOG, ConfigManager.tcp_so_backlog())
-                .option(ChannelOption.SO_REUSEADDR, ConfigManager.tcp_so_reuseaddr())
-                .childOption(ChannelOption.TCP_NODELAY, ConfigManager.tcp_nodelay())
-                .childOption(ChannelOption.SO_KEEPALIVE, ConfigManager.tcp_so_keepalive());
+                .channel(NettyEventLoopUtil.getServerSocketChannelClass()) // 获取ServerSocketChannel
+                .option(ChannelOption.SO_BACKLOG, ConfigManager.tcp_so_backlog()) // 1024
+                .option(ChannelOption.SO_REUSEADDR, ConfigManager.tcp_so_reuseaddr()) // true
+                .childOption(ChannelOption.TCP_NODELAY, ConfigManager.tcp_nodelay()) // true
+                .childOption(ChannelOption.SO_KEEPALIVE, ConfigManager.tcp_so_keepalive()); // true
 
         // set write buffer water mark
-        initWriteBufferWaterMark();
+        initWriteBufferWaterMark(); // 设置channel写缓冲区high/low water mark
 
         // init byte buf allocator
-        if (ConfigManager.netty_buffer_pooled()) {
+        if (ConfigManager.netty_buffer_pooled()) { // buffer池化与否
             this.bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
         } else {
@@ -265,22 +255,23 @@ public class RpcServer extends AbstractRemotingServer {
         }
 
         // enable trigger mode for epoll if need
-        NettyEventLoopUtil.enableTriggeredMode(bootstrap);
+        NettyEventLoopUtil.enableTriggeredMode(bootstrap); // 设置epoll触发模式
 
-        final boolean idleSwitch = ConfigManager.tcp_idle_switch();
-        final int idleTime = ConfigManager.tcp_server_idle();
-        final ChannelHandler serverIdleHandler = new ServerIdleHandler();
+        final boolean idleSwitch = ConfigManager.tcp_idle_switch(); // 是否空闲检测
+        final int idleTime = ConfigManager.tcp_server_idle(); // 空闲时间
+        final ChannelHandler serverIdleHandler = new ServerIdleHandler(); // 服务端空闲检测
         final RpcHandler rpcHandler = new RpcHandler(true, this.userProcessors);
         this.bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 
             @Override
             protected void initChannel(SocketChannel channel) {
+                System.out.println("init channel");
                 ChannelPipeline pipeline = channel.pipeline();
                 pipeline.addLast("decoder", codec.newDecoder());
                 pipeline.addLast("encoder", codec.newEncoder());
-                if (idleSwitch) {
-                    pipeline.addLast("idleStateHandler", new IdleStateHandler(0, 0, idleTime,
-                            TimeUnit.MILLISECONDS));
+                if (idleSwitch) { // 空闲检测
+                    pipeline.addLast("idleStateHandler",
+                            new IdleStateHandler(0, 0, idleTime, TimeUnit.MILLISECONDS));
                     pipeline.addLast("serverIdleHandler", serverIdleHandler);
                 }
                 pipeline.addLast("connectionEventHandler", connectionEventHandler);
@@ -291,16 +282,17 @@ public class RpcServer extends AbstractRemotingServer {
             /**
              * create connection operation<br>
              * <ul>
-             * <li>If flag manageConnection be true, use {@link DefaultConnectionManager} to add a new connection, meanwhile bind it with the channel.</li>
+             * <li>If flag manageConnection be true, use {@link DefaultConnectionManager} to add a new connection,
+             * meanwhile bind it with the channel.</li>
              * <li>If flag manageConnection be false, just create a new connection and bind it with the channel.</li>
              * </ul>
              */
             private void createConnection(SocketChannel channel) {
                 Url url = addressParser.parse(RemotingUtil.parseRemoteAddress(channel));
-                if (switches().isOn(GlobalSwitch.SERVER_MANAGE_CONNECTION_SWITCH)) {
-                    connectionManager.add(new Connection(channel, url), url.getUniqueKey());
+                if (switches().isOn(GlobalSwitch.SERVER_MANAGE_CONNECTION_SWITCH)) { // 服务端开启连接管理
+                    connectionManager.add(new Connection(channel, url), url.getUniqueKey()); // 创建连接并加入连接池
                 } else {
-                    new Connection(channel, url);
+                    new Connection(channel, url); // channel绑定Connection
                 }
                 channel.pipeline().fireUserEventTriggered(ConnectionEventType.CONNECT);
             }
@@ -309,7 +301,7 @@ public class RpcServer extends AbstractRemotingServer {
 
     @Override
     protected boolean doStart() throws InterruptedException {
-        this.channelFuture = this.bootstrap.bind(new InetSocketAddress(ip(), port())).sync();
+        this.channelFuture = this.bootstrap.bind(new InetSocketAddress(ip(), port())).sync(); // 同步
         return this.channelFuture.isSuccess();
     }
 
@@ -321,25 +313,22 @@ public class RpcServer extends AbstractRemotingServer {
     @Override
     protected boolean doStop() {
         if (null != this.channelFuture) {
-            this.channelFuture.channel().close();
+            this.channelFuture.channel().close(); // 关闭channel
         }
-        if (this.switches().isOn(GlobalSwitch.SERVER_SYNC_STOP)) {
+        if (this.switches().isOn(GlobalSwitch.SERVER_SYNC_STOP)) { // 同步停止
             this.bossGroup.shutdownGracefully().awaitUninterruptibly();
         } else {
             this.bossGroup.shutdownGracefully();
         }
-        if (this.switches().isOn(GlobalSwitch.SERVER_MANAGE_CONNECTION_SWITCH)
-                && null != this.connectionManager) {
-            this.connectionManager.shutdown();
+        if (this.switches().isOn(GlobalSwitch.SERVER_MANAGE_CONNECTION_SWITCH) && null != this.connectionManager) {
+            this.connectionManager.shutdown(); // 关闭connection
             logger.warn("Close all connections from server side!");
         }
         logger.warn("Rpc Server stopped!");
         return true;
     }
 
-    /**
-     * init rpc remoting
-     */
+    /** init rpc remoting */
     protected void initRpcRemoting() {
         this.rpcRemoting = new RpcServerRemoting(new RpcCommandFactory(), this.addressParser,
                 this.connectionManager);
@@ -900,13 +889,11 @@ public class RpcServer extends AbstractRemotingServer {
         int highWaterMark = this.netty_buffer_high_watermark();
         if (lowWaterMark > highWaterMark) {
             throw new IllegalArgumentException(
-                    String
-                            .format(
-                                    "[server side] bolt netty high water mark {%s} should not be smaller than low water mark {%s} bytes)",
-                                    highWaterMark, lowWaterMark));
+                    String.format(
+                            "[server side] bolt netty high water mark {%s} should not be smaller than low water mark {%s} bytes)",
+                            highWaterMark, lowWaterMark));
         } else {
-            logger.warn(
-                    "[server side] bolt netty low water mark is {} bytes, high water mark is {} bytes",
+            logger.warn("[server side] bolt netty low water mark is {} bytes, high water mark is {} bytes",
                     lowWaterMark, highWaterMark);
         }
         this.bootstrap.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(

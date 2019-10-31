@@ -39,9 +39,7 @@ public class GlobalSwitch implements Switch {
     public static final int SERVER_MANAGE_CONNECTION_SWITCH = 2;
     public static final int SERVER_SYNC_STOP = 3;
 
-    /**
-     * user settings
-     */
+    /** user settings */
     private BitSet userSettings = new BitSet();
 
     /**
@@ -67,12 +65,12 @@ public class GlobalSwitch implements Switch {
     // ~~~ public methods
     @Override
     public void turnOn(int index) {
-        this.userSettings.set(index);
+        this.userSettings.set(index); // 置true
     }
 
     @Override
     public void turnOff(int index) {
-        this.userSettings.clear(index);
+        this.userSettings.clear(index); // 置false
     }
 
     @Override

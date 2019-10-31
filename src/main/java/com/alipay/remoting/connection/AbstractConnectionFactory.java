@@ -54,13 +54,11 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractConnectionFactory implements ConnectionFactory {
 
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger(AbstractConnectionFactory.class);
+    private static final Logger logger = BoltLoggerFactory.getLogger(AbstractConnectionFactory.class);
 
-    private static final EventLoopGroup workerGroup = NettyEventLoopUtil.newEventLoopGroup(Runtime
-                    .getRuntime().availableProcessors() + 1,
-            new NamedThreadFactory(
-                    "bolt-netty-client-worker", true));
+    private static final EventLoopGroup workerGroup = // doubt 为什么是这个线程数
+            NettyEventLoopUtil.newEventLoopGroup(Runtime.getRuntime().availableProcessors() + 1,
+                    new NamedThreadFactory("bolt-netty-client-worker", true));
 
     private final ConfigurableInstance confInstance;
     private final Codec codec;
@@ -92,7 +90,7 @@ public abstract class AbstractConnectionFactory implements ConnectionFactory {
                 .option(ChannelOption.SO_REUSEADDR, ConfigManager.tcp_so_reuseaddr())
                 .option(ChannelOption.SO_KEEPALIVE, ConfigManager.tcp_so_keepalive());
 
-        // init netty write buffer water mark
+        // init netty write buffer water mark 初始化netty 写缓冲区water mark
         initWriteBufferWaterMark();
 
         // init byte buf allocator
@@ -112,7 +110,7 @@ public abstract class AbstractConnectionFactory implements ConnectionFactory {
 
                 boolean idleSwitch = ConfigManager.tcp_idle_switch();
                 if (idleSwitch) {
-                    pipeline.addLast("idleStateHandler",
+                    pipeline.addLast("idleStateHandler", // 空闲检测
                             new IdleStateHandler(ConfigManager.tcp_idle(), ConfigManager.tcp_idle(), 0,
                                     TimeUnit.MILLISECONDS));
                     pipeline.addLast("heartbeatHandler", heartbeatHandler);
@@ -127,8 +125,7 @@ public abstract class AbstractConnectionFactory implements ConnectionFactory {
     @Override
     public Connection createConnection(Url url) throws Exception {
         Channel channel = doCreateConnection(url.getIp(), url.getPort(), url.getConnectTimeout());
-        Connection conn = new Connection(channel, ProtocolCode.fromBytes(url.getProtocol()),
-                url.getVersion(), url);
+        Connection conn = new Connection(channel, ProtocolCode.fromBytes(url.getProtocol()), url.getVersion(), url);
         channel.pipeline().fireUserEventTriggered(ConnectionEventType.CONNECT);
         return conn;
     }
@@ -159,25 +156,21 @@ public abstract class AbstractConnectionFactory implements ConnectionFactory {
      * init netty write buffer water mark
      */
     private void initWriteBufferWaterMark() {
-        int lowWaterMark = this.confInstance.netty_buffer_low_watermark();
-        int highWaterMark = this.confInstance.netty_buffer_high_watermark();
+        int lowWaterMark = this.confInstance.netty_buffer_low_watermark(); // 32kB
+        int highWaterMark = this.confInstance.netty_buffer_high_watermark(); // 64kB
         if (lowWaterMark > highWaterMark) {
             throw new IllegalArgumentException(
-                    String
-                            .format(
-                                    "[client side] bolt netty high water mark {%s} should not be smaller than low water mark {%s} bytes)",
-                                    highWaterMark, lowWaterMark));
+                    String.format("[client side] bolt netty high water mark {%s} should not " +
+                            "be smaller than low water mark {%s} bytes)", highWaterMark, lowWaterMark));
         } else {
             logger.warn(
                     "[client side] bolt netty low water mark is {} bytes, high water mark is {} bytes",
                     lowWaterMark, highWaterMark);
         }
-        this.bootstrap.option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(
-                lowWaterMark, highWaterMark));
+        this.bootstrap.option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(lowWaterMark, highWaterMark));
     }
 
-    protected Channel doCreateConnection(String targetIP, int targetPort, int connectTimeout)
-            throws Exception {
+    protected Channel doCreateConnection(String targetIP, int targetPort, int connectTimeout) throws Exception {
         // prevent unreasonable value, at least 1000
         connectTimeout = Math.max(connectTimeout, 1000);
         String address = targetIP + ":" + targetPort;

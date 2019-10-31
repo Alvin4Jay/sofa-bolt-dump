@@ -53,11 +53,10 @@ public class ConnectionEventListener {
      * @param type      ConnectionEventType
      * @param processor ConnectionEventProcessor
      */
-    public void addConnectionEventProcessor(ConnectionEventType type,
-                                            ConnectionEventProcessor processor) {
+    public void addConnectionEventProcessor(ConnectionEventType type, ConnectionEventProcessor processor) {
         List<ConnectionEventProcessor> processorList = this.processors.get(type);
         if (processorList == null) {
-            this.processors.putIfAbsent(type, new ArrayList<ConnectionEventProcessor>(1));
+            this.processors.putIfAbsent(type, new ArrayList<>(1));
             processorList = this.processors.get(type);
         }
         processorList.add(processor);

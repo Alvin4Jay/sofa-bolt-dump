@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Sharable
 public class ConnectionEventHandler extends ChannelDuplexHandler {
+
     private static final Logger logger = BoltLoggerFactory.getLogger("ConnectionEvent");
 
     private ConnectionManager connectionManager;
@@ -50,7 +51,7 @@ public class ConnectionEventHandler extends ChannelDuplexHandler {
 
     private ConnectionEventExecutor eventExecutor;
 
-    private Reconnector reconnectManager;
+    private Reconnector reconnectManager; // 重连
 
     private GlobalSwitch globalSwitch;
 
@@ -158,11 +159,9 @@ public class ConnectionEventHandler extends ChannelDuplexHandler {
                     Channel channel = ctx.channel();
                     if (null != channel) {
                         Connection connection = channel.attr(Connection.CONNECTION).get();
-                        this.onEvent(connection, connection.getUrl().getOriginUrl(),
-                                ConnectionEventType.CONNECT);
+                        this.onEvent(connection, connection.getUrl().getOriginUrl(), ConnectionEventType.CONNECT);
                     } else {
-                        logger
-                                .warn("channel null when handle user triggered event in ConnectionEventHandler!");
+                        logger.warn("channel null when handle user triggered event in ConnectionEventHandler!");
                     }
                     break;
                 default:
@@ -184,8 +183,7 @@ public class ConnectionEventHandler extends ChannelDuplexHandler {
         ctx.channel().close();
     }
 
-    private void onEvent(final Connection conn, final String remoteAddress,
-                         final ConnectionEventType type) {
+    private void onEvent(final Connection conn, final String remoteAddress, final ConnectionEventType type) {
         if (this.eventListener != null) {
             this.eventExecutor.onEvent(new Runnable() {
                 @Override
@@ -270,7 +268,7 @@ public class ConnectionEventHandler extends ChannelDuplexHandler {
     public class ConnectionEventExecutor {
         Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
         ExecutorService executor = new ThreadPoolExecutor(1, 1, 60L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(10000),
+                new LinkedBlockingQueue<>(10000),
                 new NamedThreadFactory("Bolt-conn-event-executor", true));
 
         /**

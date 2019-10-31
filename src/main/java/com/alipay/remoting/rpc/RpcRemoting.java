@@ -43,28 +43,21 @@ import org.slf4j.Logger;
  * @version $Id: RpcRemoting.java, v 0.1 Mar 6, 2016 9:09:48 PM tao Exp $
  */
 public abstract class RpcRemoting extends BaseRemoting {
-    /**
-     * logger
-     */
+
+    /** logger */
     private static final Logger logger = BoltLoggerFactory.getLogger("RpcRemoting");
 
     static {
-        RpcProtocolManager.initProtocols();
+        RpcProtocolManager.initProtocols(); // 协议注册
     }
 
-    /**
-     * address parser to get custom args
-     */
+    /** address parser to get custom args */
     protected RemotingAddressParser addressParser;
 
-    /**
-     * connection manager
-     */
+    /** connection manager */
     protected DefaultConnectionManager connectionManager;
 
-    /**
-     * default constructor
-     */
+    /** default constructor */
     public RpcRemoting(CommandFactory commandFactory) {
         super(commandFactory);
     }
@@ -91,8 +84,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      * @throws InterruptedException
      */
     public void oneway(final String addr, final Object request, final InvokeContext invokeContext)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         Url url = this.addressParser.parse(addr);
         this.oneway(url, request, invokeContext);
     }
@@ -107,9 +99,8 @@ public abstract class RpcRemoting extends BaseRemoting {
      * @throws RemotingException
      * @throws InterruptedException
      */
-    public abstract void oneway(final Url url, final Object request,
-                                final InvokeContext invokeContext) throws RemotingException,
-            InterruptedException;
+    public abstract void oneway(final Url url, final Object request, final InvokeContext invokeContext)
+            throws RemotingException, InterruptedException;
 
     /**
      * Oneway rpc invocation.<br>
@@ -162,8 +153,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      */
     public abstract Object invokeSync(final Url url, final Object request,
                                       final InvokeContext invokeContext, final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * Synchronous rpc invocation.<br>
@@ -180,11 +170,9 @@ public abstract class RpcRemoting extends BaseRemoting {
     public Object invokeSync(final Connection conn, final Object request,
                              final InvokeContext invokeContext, final int timeoutMillis)
             throws RemotingException, InterruptedException {
-        RemotingCommand requestCommand = toRemotingCommand(request, conn, invokeContext,
-                timeoutMillis);
+        RemotingCommand requestCommand = toRemotingCommand(request, conn, invokeContext, timeoutMillis);
         preProcessInvokeContext(invokeContext, requestCommand, conn);
-        ResponseCommand responseCommand = (ResponseCommand) super.invokeSync(conn, requestCommand,
-                timeoutMillis);
+        ResponseCommand responseCommand = (ResponseCommand) super.invokeSync(conn, requestCommand, timeoutMillis);
         responseCommand.setInvokeContext(invokeContext);
 
         Object responseObject = RpcResponseResolver.resolveResponseObject(responseCommand,
@@ -206,8 +194,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      */
     public RpcResponseFuture invokeWithFuture(final String addr, final Object request,
                                               final InvokeContext invokeContext, int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         Url url = this.addressParser.parse(addr);
         return this.invokeWithFuture(url, request, invokeContext, timeoutMillis);
     }
@@ -227,8 +214,7 @@ public abstract class RpcRemoting extends BaseRemoting {
     public abstract RpcResponseFuture invokeWithFuture(final Url url, final Object request,
                                                        final InvokeContext invokeContext,
                                                        final int timeoutMillis)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * Rpc invocation with future returned.<br>
@@ -267,8 +253,7 @@ public abstract class RpcRemoting extends BaseRemoting {
      */
     public void invokeWithCallback(String addr, Object request, final InvokeContext invokeContext,
                                    InvokeCallback invokeCallback, int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         Url url = this.addressParser.parse(addr);
         this.invokeWithCallback(url, request, invokeContext, invokeCallback, timeoutMillis);
     }
@@ -285,11 +270,9 @@ public abstract class RpcRemoting extends BaseRemoting {
      * @throws RemotingException
      * @throws InterruptedException
      */
-    public abstract void invokeWithCallback(final Url url, final Object request,
-                                            final InvokeContext invokeContext,
-                                            final InvokeCallback invokeCallback,
-                                            final int timeoutMillis) throws RemotingException,
-            InterruptedException;
+    public abstract void invokeWithCallback(final Url url, final Object request, final InvokeContext invokeContext,
+                                            final InvokeCallback invokeCallback, final int timeoutMillis)
+            throws RemotingException, InterruptedException;
 
     /**
      * Rpc invocation with callback.<br>
@@ -333,24 +316,20 @@ public abstract class RpcRemoting extends BaseRemoting {
                 try {
                     command.setSerializer((Byte) clientCustomSerializer);
                 } catch (ClassCastException e) {
-                    throw new IllegalArgumentException(
-                            "Illegal custom serializer [" + clientCustomSerializer
-                                    + "], the type of value should be [byte], but now is ["
-                                    + clientCustomSerializer.getClass().getName() + "].");
+                    throw new IllegalArgumentException("Illegal custom serializer [" + clientCustomSerializer
+                            + "], the type of value should be [byte], but now is ["
+                            + clientCustomSerializer.getClass().getName() + "].");
                 }
             }
 
             // enable crc by default, user can disable by set invoke context `false` for key `InvokeContext.BOLT_CRC_SWITCH`
-            Boolean crcSwitch = invokeContext.get(InvokeContext.BOLT_CRC_SWITCH,
-                    ProtocolSwitch.CRC_SWITCH_DEFAULT_VALUE);
+            Boolean crcSwitch = invokeContext.get(InvokeContext.BOLT_CRC_SWITCH, ProtocolSwitch.CRC_SWITCH_DEFAULT_VALUE);
             if (null != crcSwitch && crcSwitch) {
-                command.setProtocolSwitch(ProtocolSwitch
-                        .create(new int[]{ProtocolSwitch.CRC_SWITCH_INDEX}));
+                command.setProtocolSwitch(ProtocolSwitch.create(new int[]{ProtocolSwitch.CRC_SWITCH_INDEX}));
             }
         } else {
             // enable crc by default, if there is no invoke context.
-            command.setProtocolSwitch(ProtocolSwitch
-                    .create(new int[]{ProtocolSwitch.CRC_SWITCH_INDEX}));
+            command.setProtocolSwitch(ProtocolSwitch.create(new int[]{ProtocolSwitch.CRC_SWITCH_INDEX}));
         }
         command.setTimeout(timeoutMillis);
         command.setRequestClass(request.getClass().getName());

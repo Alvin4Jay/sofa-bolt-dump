@@ -34,10 +34,10 @@ import java.util.concurrent.TimeUnit;
  * @version $Id: ProcessorManager.java, v 0.1 Sept 6, 2015 2:49:47 PM tao Exp $
  */
 public class ProcessorManager {
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("CommonDefault");
-    private ConcurrentHashMap<CommandCode, RemotingProcessor<?>> cmd2processors = new ConcurrentHashMap<CommandCode, RemotingProcessor<?>>(
-            4);
+
+    private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
+
+    private ConcurrentHashMap<CommandCode, RemotingProcessor<?>> cmd2processors = new ConcurrentHashMap<>(4);
 
     private RemotingProcessor<?> defaultProcessor;
 
@@ -46,17 +46,13 @@ public class ProcessorManager {
      */
     private ExecutorService defaultExecutor;
 
-    private int minPoolSize = ConfigManager
-            .default_tp_min_size();
+    private int minPoolSize = ConfigManager.default_tp_min_size();
 
-    private int maxPoolSize = ConfigManager
-            .default_tp_max_size();
+    private int maxPoolSize = ConfigManager.default_tp_max_size();
 
-    private int queueSize = ConfigManager
-            .default_tp_queue_size();
+    private int queueSize = ConfigManager.default_tp_queue_size();
 
-    private long keepAliveTime = ConfigManager
-            .default_tp_keepalive_time();
+    private long keepAliveTime = ConfigManager.default_tp_keepalive_time();
 
     public ProcessorManager() {
         defaultExecutor = new ThreadPoolExecutor(minPoolSize, maxPoolSize, keepAliveTime,

@@ -30,8 +30,7 @@ import com.alipay.remoting.config.switches.GlobalSwitch;
 /**
  * @author chengyi (mark.lx@antfin.com) 2018-11-07 15:22
  */
-public abstract class AbstractBoltClient extends AbstractLifeCycle implements BoltClient,
-        ConfigurableInstance {
+public abstract class AbstractBoltClient extends AbstractLifeCycle implements BoltClient, ConfigurableInstance {
 
     private final BoltOptions options;
     private final ConfigType configType;

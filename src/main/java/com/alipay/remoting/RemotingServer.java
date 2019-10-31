@@ -68,8 +68,7 @@ public interface RemotingServer extends Configurable, LifeCycle {
      * @param commandCode  command code
      * @param processor    processor
      */
-    void registerProcessor(byte protocolCode, CommandCode commandCode,
-                           RemotingProcessor<?> processor);
+    void registerProcessor(byte protocolCode, CommandCode commandCode, RemotingProcessor<?> processor);
 
     /**
      * Register default executor service for server.

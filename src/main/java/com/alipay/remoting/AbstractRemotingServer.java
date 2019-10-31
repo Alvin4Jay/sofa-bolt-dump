@@ -37,8 +37,8 @@ import java.net.InetSocketAddress;
  * @author jiangping
  * @version $Id: AbstractRemotingServer.java, v 0.1 2015-9-5 PM7:37:48 tao Exp $
  */
-public abstract class AbstractRemotingServer extends AbstractLifeCycle implements RemotingServer,
-        ConfigurableInstance {
+public abstract class AbstractRemotingServer extends AbstractLifeCycle
+        implements RemotingServer, ConfigurableInstance {
 
     private static final Logger logger = BoltLoggerFactory.getLogger("CommonDefault");
     private final BoltOptions options;
@@ -159,7 +159,7 @@ public abstract class AbstractRemotingServer extends AbstractLifeCycle implement
         if (config != null) {
             return (Integer) config;
         } else {
-            return ConfigManager.netty_buffer_low_watermark();
+            return ConfigManager.netty_buffer_low_watermark(); // 32k
         }
     }
 
@@ -169,7 +169,7 @@ public abstract class AbstractRemotingServer extends AbstractLifeCycle implement
         if (config != null) {
             return (Integer) config;
         } else {
-            return ConfigManager.netty_buffer_high_watermark();
+            return ConfigManager.netty_buffer_high_watermark(); // 64k
         }
     }
 }

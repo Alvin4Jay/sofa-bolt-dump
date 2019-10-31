@@ -52,8 +52,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      * @param address target address
      * @param request request
      */
-    void oneway(final String address, final Object request) throws RemotingException,
-            InterruptedException;
+    void oneway(final String address, final Object request) throws RemotingException, InterruptedException;
 
     /**
      * Oneway invocation with a {@link InvokeContext}, common api notice please see {@link #oneway(Connection, Object)}
@@ -93,8 +92,7 @@ public interface BoltClient extends Configurable, LifeCycle {
      * @param invokeContext invoke context
      */
     void oneway(final Url url, final Object request, final InvokeContext invokeContext)
-            throws RemotingException,
-            InterruptedException;
+            throws RemotingException, InterruptedException;
 
     /**
      * One way invocation using a {@link Connection} <br>

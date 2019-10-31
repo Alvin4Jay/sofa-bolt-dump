@@ -25,7 +25,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 
 /**
- * Server Idle handler.
+ * Server Idle handler. 服务端空闲检测
  * <p>
  * In the server side, the connection will be closed if it is idle for a certain period of time.
  *
@@ -46,7 +46,7 @@ public class ServerIdleHandler extends ChannelDuplexHandler {
             try {
                 logger.warn("Connection idle, close it from server side: {}",
                         RemotingUtil.parseRemoteAddress(ctx.channel()));
-                ctx.close();
+                ctx.close(); // 服务端发现channel空闲，直接关闭channel
             } catch (Exception e) {
                 logger.warn("Exception caught when closing connection in ServerIdleHandler.", e);
             }

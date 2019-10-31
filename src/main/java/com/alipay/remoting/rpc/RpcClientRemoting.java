@@ -115,16 +115,15 @@ public class RpcClientRemoting extends RpcRemoting {
      * @return connection
      */
     protected Connection getConnectionAndInitInvokeContext(Url url, InvokeContext invokeContext)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         long start = System.currentTimeMillis();
         Connection conn;
         try {
             conn = this.connectionManager.getAndCreateIfAbsent(url);
         } finally {
             if (null != invokeContext) {
-                invokeContext.putIfAbsent(InvokeContext.CLIENT_CONN_CREATETIME,
-                        (System.currentTimeMillis() - start));
+                // 客户端连接创建时间
+                invokeContext.putIfAbsent(InvokeContext.CLIENT_CONN_CREATETIME, (System.currentTimeMillis() - start));
             }
         }
         return conn;

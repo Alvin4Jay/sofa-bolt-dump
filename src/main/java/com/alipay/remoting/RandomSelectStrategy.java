@@ -56,8 +56,7 @@ public class RandomSelectStrategy implements ConnectionSelectStrategy {
             }
 
             Connection result;
-            if (null != this.globalSwitch
-                    && this.globalSwitch.isOn(GlobalSwitch.CONN_MONITOR_SWITCH)) {
+            if (null != this.globalSwitch && this.globalSwitch.isOn(GlobalSwitch.CONN_MONITOR_SWITCH)) {
                 List<Connection> serviceStatusOnConnections = new ArrayList<Connection>();
                 for (Connection conn : connections) {
                     String serviceStatus = (String) conn.getAttribute(Configs.CONN_SERVICE_STATUS);
@@ -66,8 +65,7 @@ public class RandomSelectStrategy implements ConnectionSelectStrategy {
                     }
                 }
                 if (serviceStatusOnConnections.size() == 0) {
-                    throw new Exception(
-                            "No available connection when select in RandomSelectStrategy.");
+                    throw new Exception("No available connection when select in RandomSelectStrategy.");
                 }
                 result = randomGet(serviceStatusOnConnections);
             } else {

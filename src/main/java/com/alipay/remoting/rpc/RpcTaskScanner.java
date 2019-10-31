@@ -51,10 +51,9 @@ public class RpcTaskScanner extends AbstractLifeCycle {
     public void startup() throws LifeCycleException {
         super.startup();
 
-        scheduledService = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory(
-                "RpcTaskScannerThread", true));
+        scheduledService = new ScheduledThreadPoolExecutor(1,
+                new NamedThreadFactory("RpcTaskScannerThread", true));
         scheduledService.scheduleWithFixedDelay(new Runnable() {
-
             @Override
             public void run() {
                 for (Scannable scanned : scanList) {

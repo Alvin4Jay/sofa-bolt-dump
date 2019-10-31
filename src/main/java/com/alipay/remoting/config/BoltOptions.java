@@ -32,7 +32,7 @@ public class BoltOptions {
      * Return default value if option does not exist.
      *
      * @param option target option
-     * @return the optioned value of default value if option does not exist.
+     * @return the optioned value or default value if option does not exist.
      */
     @SuppressWarnings("unchecked")
     public <T> T option(BoltOption<T> option) {

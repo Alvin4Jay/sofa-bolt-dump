@@ -48,8 +48,7 @@ public class RpcResponseResolver {
      * @param addr            response address
      * @return response object
      */
-    public static Object resolveResponseObject(ResponseCommand responseCommand, String addr)
-            throws RemotingException {
+    public static Object resolveResponseObject(ResponseCommand responseCommand, String addr) throws RemotingException {
         preProcess(responseCommand, addr);
         if (responseCommand.getResponseStatus() == ResponseStatus.SUCCESS) {
             return toResponseObject(responseCommand);
@@ -66,19 +65,16 @@ public class RpcResponseResolver {
 
     }
 
-    private static void preProcess(ResponseCommand responseCommand, String addr)
-            throws RemotingException {
+    private static void preProcess(ResponseCommand responseCommand, String addr) throws RemotingException {
         RemotingException e = null;
         String msg = null;
         if (responseCommand == null) {
-            msg = String.format("Rpc invocation timeout[responseCommand null]! the address is %s",
-                    addr);
+            msg = String.format("Rpc invocation timeout[responseCommand null]! the address is %s", addr);
             e = new InvokeTimeoutException(msg);
         } else {
             switch (responseCommand.getResponseStatus()) {
                 case TIMEOUT:
-                    msg = String.format(
-                            "Rpc invocation timeout[responseCommand TIMEOUT]! the address is %s", addr);
+                    msg = String.format("Rpc invocation timeout[responseCommand TIMEOUT]! the address is %s", addr);
                     e = new InvokeTimeoutException(msg);
                     break;
                 case CLIENT_SEND_ERROR:
@@ -90,37 +86,30 @@ public class RpcResponseResolver {
                     e = new ConnectionClosedException(msg);
                     break;
                 case SERVER_THREADPOOL_BUSY:
-                    msg = String.format("Server thread pool busy! the address is %s, id=%s", addr,
-                            responseCommand.getId());
+                    msg = String.format("Server thread pool busy! the address is %s, id=%s", addr, responseCommand.getId());
                     e = new InvokeServerBusyException(msg);
                     break;
                 case CODEC_EXCEPTION:
-                    msg = String.format("Codec exception! the address is %s, id=%s", addr,
-                            responseCommand.getId());
+                    msg = String.format("Codec exception! the address is %s, id=%s", addr, responseCommand.getId());
                     e = new CodecException(msg);
                     break;
                 case SERVER_SERIAL_EXCEPTION:
-                    msg = String
-                            .format(
-                                    "Server serialize response exception! the address is %s, id=%s, serverSide=true",
-                                    addr, responseCommand.getId());
-                    e = new SerializationException(detailErrMsg(msg, responseCommand),
-                            toThrowable(responseCommand), true);
+                    msg = String.format(
+                            "Server serialize response exception! the address is %s, id=%s, serverSide=true",
+                            addr, responseCommand.getId());
+                    e = new SerializationException(detailErrMsg(msg, responseCommand), toThrowable(responseCommand), true);
                     break;
                 case SERVER_DESERIAL_EXCEPTION:
-                    msg = String
-                            .format(
-                                    "Server deserialize request exception! the address is %s, id=%s, serverSide=true",
-                                    addr, responseCommand.getId());
-                    e = new DeserializationException(detailErrMsg(msg, responseCommand),
-                            toThrowable(responseCommand), true);
+                    msg = String.format(
+                            "Server deserialize request exception! the address is %s, id=%s, serverSide=true",
+                            addr, responseCommand.getId());
+                    e = new DeserializationException(detailErrMsg(msg, responseCommand), toThrowable(responseCommand), true);
                     break;
                 case SERVER_EXCEPTION:
                     msg = String.format(
                             "Server exception! Please check the server log, the address is %s, id=%s",
                             addr, responseCommand.getId());
-                    e = new InvokeServerException(detailErrMsg(msg, responseCommand),
-                            toThrowable(responseCommand));
+                    e = new InvokeServerException(detailErrMsg(msg, responseCommand), toThrowable(responseCommand));
                     break;
                 default:
                     break;

@@ -45,7 +45,7 @@ public class ConnectionPool implements Scannable {
      */
     public ConnectionPool(ConnectionSelectStrategy strategy) {
         this.strategy = strategy;
-        this.connections = new CopyOnWriteArrayList<Connection>();
+        this.connections = new CopyOnWriteArrayList<>();
         this.asyncCreationDone = true;
     }
 
@@ -111,7 +111,7 @@ public class ConnectionPool implements Scannable {
     public Connection get() {
         markAccess();
         if (null != connections) {
-            List<Connection> snapshot = new ArrayList<Connection>(connections);
+            List<Connection> snapshot = new ArrayList<>(connections);
             if (snapshot.size() > 0) {
                 return strategy.select(snapshot);
             } else {
@@ -194,8 +194,7 @@ public class ConnectionPool implements Scannable {
         if (null != connections && !connections.isEmpty()) {
             for (Connection conn : connections) {
                 if (!conn.isFine()) {
-                    logger.warn(
-                            "Remove bad connection when scanning conns of ConnectionPool - {}:{}",
+                    logger.warn("Remove bad connection when scanning conns of ConnectionPool - {}:{}",
                             conn.getRemoteIP(), conn.getRemotePort());
                     conn.close();
                     removeAndTryClose(conn);

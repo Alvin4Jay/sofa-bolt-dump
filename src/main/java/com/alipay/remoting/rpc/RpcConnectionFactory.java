@@ -31,7 +31,6 @@ public class RpcConnectionFactory extends DefaultConnectionFactory {
 
     public RpcConnectionFactory(ConcurrentHashMap<String, UserProcessor<?>> userProcessors,
                                 ConfigurableInstance configInstance) {
-        super(new RpcCodec(), new HeartbeatHandler(), new RpcHandler(userProcessors),
-                configInstance);
+        super(new RpcCodec(), new HeartbeatHandler(), new RpcHandler(userProcessors), configInstance);
     }
 }

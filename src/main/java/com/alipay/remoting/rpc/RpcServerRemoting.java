@@ -56,8 +56,7 @@ public class RpcServerRemoting extends RpcRemoting {
      */
     @Override
     public Object invokeSync(Url url, Object request, InvokeContext invokeContext, int timeoutMillis)
-            throws RemotingException,
-            InterruptedException {
+            throws RemotingException, InterruptedException {
         Connection conn = this.connectionManager.get(url.getUniqueKey());
         if (null == conn) {
             throw new RemotingException("Client address [" + url.getUniqueKey()

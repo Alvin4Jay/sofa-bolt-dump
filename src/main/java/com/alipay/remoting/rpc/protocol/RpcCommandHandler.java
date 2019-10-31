@@ -189,8 +189,7 @@ public class RpcCommandHandler implements CommandHandler {
      * @see CommandHandler#registerProcessor(com.alipay.remoting.CommandCode, RemotingProcessor)
      */
     @Override
-    public void registerProcessor(CommandCode cmd,
-                                  @SuppressWarnings("rawtypes") RemotingProcessor processor) {
+    public void registerProcessor(CommandCode cmd, @SuppressWarnings("rawtypes") RemotingProcessor processor) {
         this.processorManager.registerProcessor(cmd, processor);
     }
 

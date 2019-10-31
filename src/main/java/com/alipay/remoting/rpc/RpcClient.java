@@ -56,8 +56,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RpcClient extends AbstractBoltClient {
 
-    private static final Logger logger = BoltLoggerFactory
-            .getLogger("RpcRemoting");
+    private static final Logger logger = BoltLoggerFactory.getLogger("RpcRemoting");
 
     private final RpcTaskScanner taskScanner;
     private final ConcurrentHashMap<String, UserProcessor<?>> userProcessors;
@@ -73,7 +72,7 @@ public class RpcClient extends AbstractBoltClient {
 
     public RpcClient() {
         this.taskScanner = new RpcTaskScanner();
-        this.userProcessors = new ConcurrentHashMap<String, UserProcessor<?>>();
+        this.userProcessors = new ConcurrentHashMap<>();
         this.connectionEventHandler = new RpcConnectionEventHandler(switches());
         this.connectionEventListener = new ConnectionEventListener();
     }
@@ -121,23 +120,21 @@ public class RpcClient extends AbstractBoltClient {
         if (connectionSelectStrategy == null) {
             connectionSelectStrategy = new RandomSelectStrategy(switches());
         }
+        // 连接管理器
         this.connectionManager = new DefaultClientConnectionManager(connectionSelectStrategy,
                 new RpcConnectionFactory(userProcessors, this), connectionEventHandler,
                 connectionEventListener, switches());
         this.connectionManager.setAddressParser(this.addressParser);
         this.connectionManager.startup();
-        this.rpcRemoting = new RpcClientRemoting(new RpcCommandFactory(), this.addressParser,
-                this.connectionManager);
+        this.rpcRemoting = new RpcClientRemoting(new RpcCommandFactory(), this.addressParser, this.connectionManager);
         this.taskScanner.add(this.connectionManager);
         this.taskScanner.startup();
 
         if (switches().isOn(GlobalSwitch.CONN_MONITOR_SWITCH)) {
             if (monitorStrategy == null) {
-                connectionMonitor = new DefaultConnectionMonitor(new ScheduledDisconnectStrategy(),
-                        this.connectionManager);
+                connectionMonitor = new DefaultConnectionMonitor(new ScheduledDisconnectStrategy(), this.connectionManager);
             } else {
-                connectionMonitor = new DefaultConnectionMonitor(monitorStrategy,
-                        this.connectionManager);
+                connectionMonitor = new DefaultConnectionMonitor(monitorStrategy, this.connectionManager);
             }
             connectionMonitor.startup();
             logger.warn("Switch on connection monitor");

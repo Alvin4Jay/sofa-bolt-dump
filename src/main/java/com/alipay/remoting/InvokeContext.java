@@ -45,7 +45,8 @@ public class InvokeContext {
     // ~~~ invoke context keys of bolt client and server side
     public final static String BOLT_INVOKE_REQUEST_ID = "bolt.invoke.request.id";
     /**
-     * time consumed start from the time when request arrive, to the time when request be processed, this is a timespan
+     * time consumed start from the time when request arrive, to the time when request be processed,
+     * this is a timespan 时间区间
      */
     public final static String BOLT_PROCESS_WAIT_TIME = "bolt.invoke.wait.time";
     public final static String BOLT_CUSTOM_SERIALIZER = "bolt.invoke.custom.serializer";

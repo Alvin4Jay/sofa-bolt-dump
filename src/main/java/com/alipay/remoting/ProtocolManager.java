@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ProtocolManager {
 
-    private static final ConcurrentMap<ProtocolCode, Protocol> protocols = new ConcurrentHashMap<ProtocolCode, Protocol>();
+    private static final ConcurrentMap<ProtocolCode, Protocol> protocols = new ConcurrentHashMap<>();
 
     public static Protocol getProtocol(ProtocolCode protocolCode) {
         return protocols.get(protocolCode);
